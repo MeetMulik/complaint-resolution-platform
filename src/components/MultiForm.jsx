@@ -20,8 +20,8 @@ import {
 } from "@chakra-ui/react";
 import { useToast } from "@chakra-ui/react";
 import MyDropzone from "./Dropzone";
-
-
+import { connectWithReportContract, connectWallet } from "../api/index";
+import { useNavigate } from "react-router-dom";
 
 const Form1 = () => {
   const [show, setShow] = useState(false);
@@ -32,8 +32,42 @@ const Form1 = () => {
   const [governmentBody, setGovernmentBody] = useState("");
   const [location, setLocation] = useState("");
   const [complaintDetails, setComplaintDetails] = useState("");
+  const [account, setAccount] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const [name, setName] = useState("");
 
-  const handleComplaint = () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const contract = await connectWithReportContract();
+    const connectAccount = await connectWallet();
+    setAccount(connectAccount);
+    console.log(connectAccount);
+    const userName = await contract.getUsername(connectAccount);
+    console.log(userName);
+    setName(userName);
+
+    setLoading(true);
+    try {
+      const contract = await connectWithReportContract();
+      const response = await contract.addReport(
+        complaintTitle,
+        "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.heraldgoa.in%2FCafe%2FALL-DUG-UP%2F142882&psig=AOvVaw2fJ2NpOxhi5i6nha1O2G9_&ust=1711912454155000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCKCZpYjZnIUDFQAAAAAdAAAAABAE",
+        complaintDetails,
+        userName,
+        location,
+        governmentBody
+      );
+      console.log(response);
+      setLoading(false);
+      setIsOpen(false);
+
+      
+    } catch (error) {
+      console.log(error);
+    }
+  
+
     console.log(complaintTitle);
     console.log(location);
     console.log(complaintDetails);
@@ -91,7 +125,7 @@ const Form1 = () => {
       </FormControl>
 
       <Box mt={"2%"}>
-        <Button w="7rem" colorScheme="red" variant="solid" onClick={handleComplaint}>
+        <Button w="7rem" colorScheme="red" variant="solid" onClick={handleSubmit}>
           Submit
         </Button>
       </Box>

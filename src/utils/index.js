@@ -1,1 +1,1 @@
-export const reportAddress = "0x5C7Cb0384Cd03f72F105de18060b874E148958DB";
+export const reportAddress = "0xF59D0796853b1eD69E134ea6181a4f268525acb1";
