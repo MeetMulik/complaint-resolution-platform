@@ -1,11 +1,37 @@
 import { Box, Center, Heading, Text, Stack, Avatar, useColorModeValue ,Flex} from "@chakra-ui/react";
+import { useEffect, useState } from "react";
 import { FiArrowUpCircle } from "react-icons/fi";
 
 export default function Card({ report, connectWithReportContract }) {
 
+  const [likes, setLikes] = useState(null);
+  const [liked, setLiked] = useState(false);
+
+  const getLikes = async () => {
+
+    try {
+      const contract = await connectWithReportContract();
+      const response = await contract.getLikesOfReport(report.uid);
+      await setLiked(parseInt(response._hex, 16));
+      await setLikes(parseInt(response._hex, 16));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const handleUpvote = async () => {
-    console.log('upvote')
+    console.log(report);
+    try {
+      const contract = await connectWithReportContract();
+      const response = await contract.likeTheReport(report.uid);
+    } catch (error) {
+      console.log(error);
+    }
   }
+
+  useEffect(() => {
+    getLikes();
+  }, [likes]);
 
   return (
     <Center py={6}>
@@ -20,8 +46,9 @@ export default function Card({ report, connectWithReportContract }) {
         overflow={"hidden"}
       >
         <Box h={"210px"} bg={"gray.100"} mt={-6} mx={-6} mb={6} pos={"relative"}>
-          <img src={report.image_url} alt="Example" />
+          <img src={report.image_url} alt="Example" width={370}/>
         </Box>
+        <Box h={"20px"}></Box>
         <Stack>
           <Heading
             // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -43,7 +70,7 @@ export default function Card({ report, connectWithReportContract }) {
             </Flex>
 
             <Text color={"gray.500"}>
-              Upvotes: 5
+              {likes}
             </Text>
           </Stack>
         </Stack>
