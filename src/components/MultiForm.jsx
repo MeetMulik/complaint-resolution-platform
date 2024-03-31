@@ -52,7 +52,7 @@ const Form1 = () => {
       const contract = await connectWithReportContract();
       const response = await contract.addReport(
         complaintTitle,
-        "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.heraldgoa.in%2FCafe%2FALL-DUG-UP%2F142882&psig=AOvVaw2fJ2NpOxhi5i6nha1O2G9_&ust=1711912454155000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCKCZpYjZnIUDFQAAAAAdAAAAABAE",
+        complaintImage,
         complaintDetails,
         userName,
         location,
@@ -66,13 +66,6 @@ const Form1 = () => {
     } catch (error) {
       console.log(error);
     }
-  
-
-    console.log(complaintTitle);
-    console.log(location);
-    console.log(complaintDetails);
-    console.log(complaintImage);
-    console.log(governmentBody);
   };
 
   return (
@@ -93,7 +86,7 @@ const Form1 = () => {
         <FormLabel htmlFor="complaint-image" fontWeight={"normal"}>
           Upload Image
         </FormLabel>
-        <Input onChange={(e) => setComplaintImage(e.target.value)} id="complaint-image" placeholder="Upload the image for the complaint" type="file" />
+        <Input onChange={(e) => setComplaintImage(e.target.value)} id="complaint-image" placeholder="Upload the image for the complaint" type="text" />
       </FormControl>
 
       <FormControl mt="2%" mr="5%">
